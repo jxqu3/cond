@@ -9,16 +9,15 @@ macro_rules! cond {
     };
 }
 
-fn test_bool(test: &str, res: &mut String) -> bool {
-    *res = test.to_string();
-    println!("test: {}", test);
-    true
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
+    fn test_bool(test: &str, res: &mut String) -> bool {
+        *res = test.to_string();
+        println!("test: {}", test);
+        true
+    }
+    
     #[test]
     fn it_works() {
         let a = 195;
