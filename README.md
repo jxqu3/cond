@@ -39,10 +39,10 @@ cargo add cond
 Or just add the 4 line macro in your project:
 ```rust
 macro_rules! cond {
-    ($($cond:expr => $value:expr),* $(, _ => $dft:expr)? $(,)?) => {
+    ($($condition:expr => $value:expr),* $(, _ => $default:expr)? $(,)?) => {
         match () {
-            $(() if $cond => $value,)*
-            () => ($($dft)?),
+            $(() if $condition => $value,)*
+            () => ($($default)?),
         }
     };
 }

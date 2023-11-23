@@ -9,10 +9,10 @@
 /// }
 /// ```
 macro_rules! cond {
-    ($($cond:expr => $value:expr),* $(, _ => $dft:expr)? $(,)?) => {
+    ($($condition:expr => $value:expr),* $(, _ => $default:expr)? $(,)?) => {
         match () {
-            $(() if $cond => $value,)*
-            () => ($($dft)?),
+            $(() if $condition => $value,)*
+            () => ($($default)?),
         }
     };
 }
