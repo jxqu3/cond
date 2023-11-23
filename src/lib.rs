@@ -1,5 +1,10 @@
 #[macro_export]
-// This is a macro to use a match with boolean conditions, like a empty switch in Go.
+/// This is a macro to use a match with boolean conditions, like a empty switch in Go.
+/// 
+/// ```rust
+/// cond! {
+///     a < 5 => println!("a is less than 5"),
+///}
 macro_rules! cond {
     ($($cond:expr => $value:expr),* $(, _ => $dft:expr)? $(,)?) => {
         match () {
@@ -17,7 +22,7 @@ mod tests {
         println!("test: {}", test);
         true
     }
-    
+
     #[test]
     fn it_works() {
         let a = 195;
