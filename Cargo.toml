@@ -6,6 +6,9 @@ license = "MIT"
 description = "Rust macro to use a match-like syntax as a elegant alternative to nesting if-else statements"
 homepage = "https://github.com/checkm4ted/cond"
 edition = "2021"
+repository = "https://github.com/checkm4ted/cond"
+documentation = "https://docs.rs/cond"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
