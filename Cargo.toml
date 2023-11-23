@@ -3,6 +3,8 @@ name = "cond"
 version = "1.0.0"
 authors = ["CheckM4te", "github.com/Esper89"]
 license = "MIT"
+description = "Rust macro to use a match-like syntax as a elegant alternative to nesting if-else statements"
+homepage = "https://github.com/checkm4ted/cond"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
