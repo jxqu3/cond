@@ -1,6 +1,6 @@
 [package]
 name = "cond"
-version = "1.0.4"
+version = "1.0.5"
 authors = ["CheckM4te"]
 license = "MIT"
 description = "Rust macro to use a match-like syntax as an elegant alternative to nesting if-else statements"
