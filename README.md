@@ -1,9 +1,12 @@
-# cond
-Rust macro to use a match-like syntax as a elegant alternative to nesting if-else statement.  
-I got the idea from Go's empty switch statements. I thought it could be cool if it was in rust so I asked if that was possible in rust's discord server. They told me it wasn't unless you used a pretty ugly syntax in a match, and Esper89 (github in credits) made a macro for it. I added some tests and documentation and here's my first rust crate. 
+# `cond`
 
-# example:
-```rust
+Rust macro to use a match-like syntax as an elegant alternative to many `if`-`else` statements.
+
+I got the idea from empty [Go `switch` statements](https://go.dev/ref/spec#Switch_statements). I thought it could be cool if it was in Rust so I asked if that was possible in the Rust community Discord server. They told me it wasn't unless you used a pretty ugly syntax in a match, and Esper89 (GitHub in credits) made a macro for it. I added some tests and documentation and here's my first Rust crate.
+
+## Example
+
+```rs
 use cond::cond;
 
 fn main() {
@@ -28,25 +31,29 @@ fn main() {
 
     println!("result: {}", result);
 }
-
 ```
 
-# usage
-You can just add the crate with
-```bash
+## Usage
+
+You can just add the crate with:
+
+```sh
 cargo add cond
 ```
-Or just add the 4 line macro in your project:
-```rust
+
+Or just add the 8 line macro to your project:
+
+```rs
 macro_rules! cond {
-    ($($cond:expr => $value:expr),* $(, _ => $dft:expr)? $(,)?) => {
+    ($($condition:expr => $value:expr),* $(, _ => $default:expr)? $(,)?) => {
         match () {
-            $(() if $cond => $value,)*
-            () => ($($dft)?),
+            $(() if $condition => $value,)*
+            () => ($($default)?),
         }
     };
 }
 ```
 
-# credits
-Credits to github.com/Esper89 for essentially making the whole macro in the Rust discord server.
+## Credits
+
+Credits to [Esper89](https://github.com/Esper89) for essentially making the whole macro in the Rust community Discord server.
