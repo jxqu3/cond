@@ -2,6 +2,9 @@
 //!
 //! For the full documentation, see [`cond`].
 
+//! Disable tests in `no_std` environments.
+#![cfg_attr(not(test), no_std)]
+
 #[macro_export]
 /// A macro for matching on boolean conditions, like an empty [Go `switch` statement].
 ///
