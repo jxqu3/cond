@@ -46,10 +46,8 @@ Or just add the 8 line macro to your project:
 ```rs
 macro_rules! cond {
     ($($condition:expr => $value:expr),* $(, _ => $default:expr)? $(,)?) => {
-        match () {
-            $(() if $condition => $value,)*
-            () => ($($default)?),
-        }
+        $(if $condition { $value } else)*
+        { $($default)? }
     };
 }
 ```
