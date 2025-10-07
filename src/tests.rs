@@ -107,3 +107,33 @@ fn test_let_pattern_short_circuit() {
 
     assert_eq!(side_effect, "matched");
 }
+
+#[test]
+fn test_let_chain_with_conditions() {
+    let maybe_number = Some(15);
+
+    // Test with && chain
+    let result = cond! {
+        let Some(x) = maybe_number && x < 10 => "small",
+        let Some(x) = maybe_number && x == 10 => "medium",
+        let Some(x) = maybe_number && x > 10 => "large",
+        _ => "none",
+    };
+    assert_eq!(result, "large");
+
+    // Test multiple && conditions
+    let maybe_number = Some(5);
+    let result = cond! {
+        let Some(x) = maybe_number && x < 10 && x > 0 => "valid",
+        _ => "invalid",
+    };
+    assert_eq!(result, "valid");
+
+    // Test that pattern fails with failed guard
+    let maybe_number = Some(15);
+    let result = cond! {
+        let Some(x) = maybe_number && x < 10 => "small",
+        _ => "not small",
+    };
+    assert_eq!(result, "not small");
+}
