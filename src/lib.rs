@@ -35,6 +35,20 @@
 /// assert_eq!(text, "a is less than b");
 /// ```
 ///
+/// # Pattern Matching
+///
+/// You can use `let` patterns to match on values:
+///
+/// ```
+/// # use cond::cond;
+/// let maybe_number = Some(42);
+/// let result = cond! {
+///     let Some(n) = maybe_number => n * 2,
+///     _ => 0,
+/// };
+/// assert_eq!(result, 84);
+/// ```
+///
 /// # Caveat
 ///
 /// Expressions that end with blocks must still have commas after them in `cond` invocations, unlike
@@ -73,9 +87,24 @@
 ///
 /// [Go `switch` statement]: <https://go.dev/ref/spec#Switch_statements>
 macro_rules! cond {
-    ($($condition:expr => $value:expr),* $(, _ => $default:expr)? $(,)?) => {
-        $(if $condition { $value } else)*
-        { $($default)? }
+    // Match let patterns
+    (let $pat:pat = $expr:expr => $value:expr $(, $($rest:tt)*)?) => {
+        if let $pat = $expr { $value } else { cond!($($($rest)*)?) }
+    };
+
+    // Default branch - must come before boolean expressions to avoid ambiguity
+    (_ => $default:expr $(,)?) => {
+        $default
+    };
+
+    // Match boolean expressions
+    ($condition:expr => $value:expr $(, $($rest:tt)*)?) => {
+        if $condition { $value } else { cond!($($($rest)*)?) }
+    };
+
+    // Empty (unit return)
+    () => {
+        ()
     };
 }
 
