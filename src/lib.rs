@@ -1,8 +1,10 @@
-//! A macro for matching on boolean conditions.
+//! A macro for matching on boolean conditions and patterns.
+//!
+//! Requires Rust 2024 edition for let chain support.
 //!
 //! For the full documentation, see [`cond`].
 
-//! Disable tests in `no_std` environments.
+//! Uses `no_std` except during tests (which require `std`).
 #![cfg_attr(not(test), no_std)]
 
 #[macro_export]
@@ -33,6 +35,35 @@
 ///     _ => "a is equal to b",
 /// };
 /// assert_eq!(text, "a is less than b");
+/// ```
+///
+/// # Pattern Matching
+///
+/// You can use `let` patterns to match on values:
+///
+/// ```
+/// # use cond::cond;
+/// let maybe_number = Some(42);
+/// let result = cond! {
+///     let Some(n) = maybe_number => n * 2,
+///     _ => 0,
+/// };
+/// assert_eq!(result, 84);
+/// ```
+///
+/// # Let Chains (Rust 2024)
+///
+/// You can use `&&` to chain conditions with `let` patterns:
+///
+/// ```
+/// # use cond::cond;
+/// let maybe_number = Some(15);
+/// let result = cond! {
+///     let Some(x) = maybe_number && x < 10 => "small",
+///     let Some(x) = maybe_number && x >= 10 => "large",
+///     _ => "none",
+/// };
+/// assert_eq!(result, "large");
 /// ```
 ///
 /// # Caveat
@@ -73,9 +104,32 @@
 ///
 /// [Go `switch` statement]: <https://go.dev/ref/spec#Switch_statements>
 macro_rules! cond {
-    ($($condition:expr => $value:expr),* $(, _ => $default:expr)? $(,)?) => {
-        $(if $condition { $value } else)*
-        { $($default)? }
+    // Match let patterns - start token accumulation
+    (let $pat:pat = $($rest:tt)*) => {
+        cond!(@let $pat = () $($rest)*)
+    };
+
+    // Accumulate tokens after = until we hit =>
+    (@let $pat:pat = ($($acc:tt)*) => $value:expr $(, $($rest:tt)*)?) => {
+        if let $pat = $($acc)* { $value } else { cond!($($($rest)*)?) }
+    };
+    (@let $pat:pat = ($($acc:tt)*) $next:tt $($rest:tt)*) => {
+        cond!(@let $pat = ($($acc)* $next) $($rest)*)
+    };
+
+    // Default branch - must come before boolean expressions to avoid ambiguity
+    (_ => $default:expr $(,)?) => {
+        $default
+    };
+
+    // Match boolean expressions
+    ($condition:expr => $value:expr $(, $($rest:tt)*)?) => {
+        if $condition { $value } else { cond!($($($rest)*)?) }
+    };
+
+    // Empty (unit return)
+    () => {
+        ()
     };
 }
 
